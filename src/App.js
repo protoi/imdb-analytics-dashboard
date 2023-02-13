@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import MyBarGraph from "./BarGraph";
+const data = require("./data.json");
 // import { VictoryBar, VictoryChart, VictoryAxis } from 'victory';
 
 /* import {
@@ -65,8 +66,7 @@ function BarPlot({ d }) {
 function App() {
   return (
     <div className="App">
-      <MyBarGraph d={ddddd}></MyBarGraph>
-      
+      <MyBarGraph data={data}></MyBarGraph>
     </div>
   );
 }

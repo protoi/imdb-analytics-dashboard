@@ -1,0 +1,72 @@
+[
+  {
+    "name": "genre",
+    "genre_distribution": [
+      { "name": "action", "searches": 10 },
+      { "name": "adventure", "searches": 20 },
+      { "name": "animation", "searches": 30 },
+      { "name": "comedy", "searches": 30 },
+      { "name": "crime", "searches": 15 },
+      { "name": "documentary", "searches": 10 },
+      { "name": "drama", "searches": 25 },
+      { "name": "family", "searches": 10 },
+      { "name": "fantasy", "searches": 10 },
+      { "name": "history", "searches": 5 },
+      { "name": "horror", "searches": 25 },
+      { "name": "music", "searches": 30 },
+      { "name": "mystery", "searches": 25 },
+      { "name": "romance", "searches": 25 },
+      { "name": "science fiction", "searches": 15 },
+      { "name": "tv movie", "searches": 30 },
+      { "name": "thriller", "searches": 15 },
+      { "name": "war", "searches": 5 },
+      { "name": "western", "searches": 15 }
+    ],
+    "total_count": 350
+  },
+  {
+    "name": "actor",
+    "total_count": 400,
+    "top_5_actor_distribution": [
+      { "name": "Actor #1", "searches": 30 },
+      { "name": "Actor #2", "searches": 25 },
+      { "name": "Actor #3", "searches": 20 },
+      { "name": "Actor #4", "searches": 15 },
+      { "name": "Actor #5", "searches": 10 }
+    ]
+  },
+  {
+    "name": "movie",
+    "total_count": 300,
+    "top_5_movie_distribution": [
+      { "name": "Movie #1", "searches": 15 },
+      { "name": "Movie #2", "searches": 10 },
+      { "name": "Movie #3", "searches": 5 },
+      { "name": "Movie #4", "searches": 3 },
+      { "name": "Movie #5", "searches": 2 }
+    ]
+  },
+  {
+    "name": "plot",
+    "total_count": 100
+  },
+  {
+    "name": "release_year",
+    "total_count": 150,
+    "year_distribution": [
+      { "year": "2023", "searches": 15 },
+      { "year": "2022", "searches": 14 },
+      { "year": "2021", "searches": 14 },
+      { "year": "2019", "searches": 12 },
+      { "year": "2018", "searches": 12 },
+      { "year": "2017", "searches": 11 },
+      { "year": "2016", "searches": 10 },
+      { "year": "2015", "searches": 9 },
+      { "year": "2014", "searches": 9 },
+      { "year": "2013", "searches": 8 },
+      { "year": "2012", "searches": 5 },
+      { "year": "2011", "searches": 3 },
+      { "year": "2010", "searches": 2 }
+    ]
+  }
+]
