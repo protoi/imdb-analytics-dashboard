@@ -1,25 +1,72 @@
-import React from 'react';
+import React from "react";
+import "./App.css";
+import MyBarGraph from "./BarGraph";
+// import { VictoryBar, VictoryChart, VictoryAxis } from 'victory';
 
-import logo from './logo.svg';
-import './App.css';
-
+/* import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
+*/
+const ddddd = [
+  {
+    name: "actor",
+    queries: 400,
+  },
+  {
+    name: "genre",
+    queries: 300,
+  },
+  {
+    name: "movie",
+    queries: 200,
+  },
+  {
+    name: "plot",
+    queries: 270,
+  },
+  {
+    name: "release_year",
+    queries: 190,
+  },
+];
+/* 
+function BarPlot({ d }) {
+  return (
+      <BarChart
+        width={500}
+        height={500}
+        data={d}
+        margin={{
+          top: 0,
+          right: 0,
+          left: 0,
+          bottom: 100,
+        }}
+        onClick={(e) => {
+          console.log(e);
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        
+        <Bar dataKey="queries" fill="#8884d8" />
+      </BarChart>
+  );
+}
+ */
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <MyBarGraph d={ddddd}></MyBarGraph>
+      
     </div>
   );
 }
