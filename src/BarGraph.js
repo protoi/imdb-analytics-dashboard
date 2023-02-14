@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { render } from "react-dom";
+// import { render } from "react-dom";
 import WordCloud from "react-d3-cloud";
 
 import { scaleOrdinal } from "d3-scale";
@@ -28,6 +28,19 @@ const schemeCategory10ScaleOrdinal = scaleOrdinal(schemeCategory10);
 
 const colors = ["#FC7333", "#BFDD38", "#1F8A70", "#334299", "#16AA55"];
 
+function color_maker(hexval, offset) {
+  return `#${((hexval + offset * 8 + offset * 4) % 16777216).toString(16)}`;
+  // let hexString = "0123456789ABCDEF";
+  // return (
+  // String(hexString.substring((offset >> 4) & 0x0f, 1)) +
+  // hexString.substring(offset & 0x0f, 1)
+  // );
+}
+
+function get_color(a) {
+  console.log(a);
+  return `#AAAAAA`;
+}
 const MyBarGraph = ({ data }) => {
   let [graphData, setGraphData] = useState(data); //array
   let [intentComponentToRender, setIntentComponentToRender] = useState(null);
@@ -140,7 +153,8 @@ function BarMaker(someEvent, graphData, title_text, x_axis_key, y_axis_key) {
             return (
               <Cell
                 key={`cell-${index}`}
-                fill={colors[index % colors.length]}
+                // fill={colors[index % colors.length]}
+                fill={color_maker(0xffaaff, (index + 1) * 4)}
               />
             );
           })}
@@ -176,7 +190,7 @@ function PieMaker(someEvent, graphData, title_text) {
             return (
               <Cell
                 key={`cell-${index}`}
-                fill={colors[index % colors.length]}
+                fill={color_maker(0x996699, (index + 1) * 4)}
               />
             );
           })}
