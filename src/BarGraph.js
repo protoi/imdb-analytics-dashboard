@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { TagCloud } from "react-tagcloud";
 // import { render } from "react-dom";
-import WordCloud from "react-d3-cloud";
+/* import WordCloud from "react-d3-cloud";
 
 import { scaleOrdinal } from "d3-scale";
-import { schemeCategory10 } from "d3-scale-chromatic";
+import { schemeCategory10 } from "d3-scale-chromatic"; */
+
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 import {
   PieChart,
@@ -18,7 +21,7 @@ import {
   // Legend,
 } from "recharts";
 
-const schemeCategory10ScaleOrdinal = scaleOrdinal(schemeCategory10);
+// const schemeCategory10ScaleOrdinal = scaleOrdinal(schemeCategory10);
 
 /* const sampleData = [
   { x: "A", y: 150 },
@@ -26,7 +29,7 @@ const schemeCategory10ScaleOrdinal = scaleOrdinal(schemeCategory10);
   { x: "C", y: 400 },
 ]; */
 
-const colors = ["#FC7333", "#BFDD38", "#1F8A70", "#334299", "#16AA55"];
+// const colors = ["#FC7333", "#BFDD38", "#1F8A70", "#334299", "#16AA55"];
 
 function color_maker(hexval, offset) {
   return `#${((hexval + offset * 8 + offset * 4) % 16777216).toString(16)}`;
@@ -37,10 +40,6 @@ function color_maker(hexval, offset) {
   // );
 }
 
-function get_color(a) {
-  console.log(a);
-  return `#AAAAAA`;
-}
 const MyBarGraph = ({ data }) => {
   let [graphData, setGraphData] = useState(data); //array
   let [intentComponentToRender, setIntentComponentToRender] = useState(null);
@@ -89,17 +88,17 @@ const MyBarGraph = ({ data }) => {
               graphData[0].genre_distribution,
               "Genre Distributions"
             ),
-            /*  actor: CloudMaker(
+            actor: CloudMaker(
               graphData[1].top_5_actor_distribution,
               "Top 5 Actors"
-            ), */
-            actor: BarMaker(
+            ),
+            /* actor: BarMaker(
               null,
               graphData[1].top_5_actor_distribution,
               "Top 5 Actors",
               "name",
               "searches"
-            ),
+            ), */
             movie: BarMaker(
               null,
               graphData[2].top_5_movie_distribution,
@@ -147,7 +146,7 @@ function BarMaker(someEvent, graphData, title_text, x_axis_key, y_axis_key) {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={x_axis_key} />
         <YAxis />
-        <Tooltip />
+        <Tooltip content={TooltipGen("hello", "world")} />
         <Bar dataKey={y_axis_key} fill="salmon">
           {graphData.map((entry, index) => {
             return (
@@ -191,13 +190,54 @@ function PieMaker(someEvent, graphData, title_text) {
               <Cell
                 key={`cell-${index}`}
                 fill={color_maker(0x996699, (index + 1) * 4)}
+                onClick={(e) => {
+                  console.log(e);
+                }}
               />
             );
           })}
         </Pie>
-        <Tooltip />
+        <Tooltip  />
       </PieChart>
     </div>
+  );
+}
+
+function TooltipGen(name, count) {
+  return (
+    <div>
+      <h3>Name: {name}</h3>
+      <h3>Count: {count}</h3>
+    </div>
+  );
+}
+
+function CustomRenderer(tag, size, color) {
+  return (
+    <>
+      <span
+        id={`${tag.name}-${size}`}
+        key={tag.name}
+        style={{
+          animation: "blinker 10s linear infinite",
+          animationDelay: `${Math.random() * 2}s`,
+          fontSize: `${size}px`,
+          // border: `2px solid ${color}`,
+          // outline: `1px solid ${color}`,
+          margin: "1px",
+          padding: "1px",
+          display: "inline-block",
+          color: `${color}`,
+        }}
+      >
+        {tag.name}
+      </span>
+      <ReactTooltip
+        anchorId={`${tag.name}-${size}`}
+        place="bottom"
+        content={TooltipGen(tag.name, tag.count)}
+      />
+    </>
   );
 }
 
@@ -205,18 +245,24 @@ function CloudMaker(graphData, title_text) {
   return (
     <div>
       <h1>{title_text}</h1>
-      <WordCloud
-        data={graphData}
-        width={500}
-        height={500}
-        font="Roboto"
-        fontWeight="bold"
-        fontSize={(word) => Math.log2(word.value) * 10}
-        spiral="rectangular"
-        rotate={(word) => word.value % 360}
-        padding={5}
-        random={Math.random}
-        // fill={(d, i) => schemeCategory10ScaleOrdinal(i)}
+      <TagCloud
+        style={{
+          width: 500,
+          height: 500,
+          outline: "1px dashed red",
+          overflow: "hidden",
+        }}
+        minSize={1}
+        maxSize={25}
+        tags={graphData}
+        colorOptions={{
+          luminosity: "dark",
+          hue: "#ff0000",
+        }}
+        renderer={CustomRenderer}
+        onMouseOver={(e) => {
+          console.log(e);
+        }}
       />
     </div>
   );
