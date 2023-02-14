@@ -146,7 +146,8 @@ function BarMaker(someEvent, graphData, title_text, x_axis_key, y_axis_key) {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={x_axis_key} />
         <YAxis />
-        <Tooltip content={TooltipGen("hello", "world")} />
+        <Tooltip />
+
         <Bar dataKey={y_axis_key} fill="salmon">
           {graphData.map((entry, index) => {
             return (
@@ -164,16 +165,56 @@ function BarMaker(someEvent, graphData, title_text, x_axis_key, y_axis_key) {
 }
 
 function PieMaker(someEvent, graphData, title_text) {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const [tooltipData, setTooltipData] = useState({
+    genre: null,
+    searches: null,
+  });
+
+  const handleMouseOver = (event) => {
+    setIsHovering(true);
+    // handleMouseMove(event);
+    setTooltipData({ genre: event["name"], searches: event["searches"] });
+    // console.log(event);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovering(false);
+    setTooltipData({ genre: null, searches: null });
+  };
+
+  const handleMouseMove = (event) => {
+    console.log(event);
+    if (event == null) return;
+    const { chartX, chartY } = event;
+    console.log(`${chartX} ----- ${chartY}`);
+    setMousePosition({ x: chartX + 10, y: chartY + 10 });
+  };
+
   return (
     <div>
       <h1>{title_text}</h1>
+      {isHovering && (
+        <div
+          style={{
+            position: "absolute",
+            top: mousePosition.y,
+            left: mousePosition.x,
+          }}
+        >
+          Hover Component
+        </div>
+      )}
       <PieChart
         width={500}
         height={500}
-        onClick={(e) => {
+        /* onClick={(e) => {
+          console.log(e);
           if (e == null || someEvent == null) return;
           someEvent(e);
-        }}
+        }} */
+        onMouseMove={handleMouseMove}
       >
         <Pie
           dataKey="searches"
@@ -184,6 +225,8 @@ function PieMaker(someEvent, graphData, title_text) {
           outerRadius={200}
           fill="salmon"
           label
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
         >
           {graphData.map((entry, index) => {
             return (
@@ -197,7 +240,7 @@ function PieMaker(someEvent, graphData, title_text) {
             );
           })}
         </Pie>
-        <Tooltip  />
+        <Tooltip />
       </PieChart>
     </div>
   );
