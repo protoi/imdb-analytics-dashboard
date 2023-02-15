@@ -123,7 +123,6 @@ const MyBarGraph = ({ data }) => {
   } */
 };
 
-export default MyBarGraph;
 function BarMaker(someEvent, graphData, title_text, x_axis_key, y_axis_key) {
   return (
     <div>
@@ -165,7 +164,7 @@ function BarMaker(someEvent, graphData, title_text, x_axis_key, y_axis_key) {
 }
 
 function PieMaker(someEvent, graphData, title_text) {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  /*  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [tooltipData, setTooltipData] = useState({
     genre: null,
@@ -173,75 +172,67 @@ function PieMaker(someEvent, graphData, title_text) {
   });
 
   const handleMouseOver = (event) => {
+    if (event == null) {
+      setIsHovering(false);
+      return;
+    }
     setIsHovering(true);
-    // handleMouseMove(event);
     setTooltipData({ genre: event["name"], searches: event["searches"] });
-    // console.log(event);
   };
 
   const handleMouseOut = () => {
     setIsHovering(false);
+    console.log(`HOVERED OUT`);
     setTooltipData({ genre: null, searches: null });
   };
 
   const handleMouseMove = (event) => {
-    console.log(event);
-    if (event == null) return;
+    // console.log(event);
+    if (event == null) {
+      return;
+    }
     const { chartX, chartY } = event;
     console.log(`${chartX} ----- ${chartY}`);
-    setMousePosition({ x: chartX + 10, y: chartY + 10 });
+    setMousePosition({ x: chartX, y: chartY });
   };
-
+ */
   return (
     <div>
       <h1>{title_text}</h1>
-      {isHovering && (
-        <div
-          style={{
-            position: "absolute",
-            top: mousePosition.y,
-            left: mousePosition.x,
-          }}
-        >
-          Hover Component
-        </div>
-      )}
+
       <PieChart
         width={500}
         height={500}
-        /* onClick={(e) => {
-          console.log(e);
-          if (e == null || someEvent == null) return;
-          someEvent(e);
-        }} */
-        onMouseMove={handleMouseMove}
+        /*         onMouseMove={(e) => handleMouseMove(e)}
+        onMouseOut={handleMouseOut} */
       >
         <Pie
           dataKey="searches"
-          isAnimationActive={true}
+          isAnimationActive={false}
           data={graphData}
           cx={250}
           cy={250}
           outerRadius={200}
           fill="salmon"
           label
-          onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
+          // onMouseOver={handleMouseOver}
         >
           {graphData.map((entry, index) => {
             return (
               <Cell
                 key={`cell-${index}`}
-                fill={color_maker(0x996699, (index + 1) * 4)}
-                onClick={(e) => {
-                  console.log(e);
-                }}
+                fill={color_maker(0x888888, (index + 1) * 4)}
               />
             );
           })}
         </Pie>
         <Tooltip />
       </PieChart>
+      {/* {isHovering === true && (
+        <div>
+          {TooltipGen(tooltipData.genre, tooltipData.searches)}
+        </div>
+      )} */}
     </div>
   );
 }
@@ -310,3 +301,5 @@ function CloudMaker(graphData, title_text) {
     </div>
   );
 }
+
+export default MyBarGraph;

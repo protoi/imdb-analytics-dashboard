@@ -1,0 +1,173 @@
+[
+  {
+    "day": "Monday",
+    "queries": 240,
+    "daily_queries": [
+      {
+        "hour": "00:00",
+        "queries": 10,
+        "hourly_queries": [
+          {
+            "timestamp": "time #1",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          },
+          {
+            "timestamp": "time #2",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          }
+        ]
+      },
+      {
+        "hour": "01:00",
+        "queries": 20,
+        "hourly_queries": [
+          {
+            "timestamp": "time #134",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "Tuesday",
+    "queries": 120,
+    "daily_queries": [
+      {
+        "hour": "00:00",
+        "queries": 10,
+        "hourly_queries": [
+          {
+            "timestamp": "time #1",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "Wednesday",
+    "queries": 435,
+    "daily_queries": [
+      {
+        "hour": "00:00",
+        "queries": 10,
+        "hourly_queries": [
+          {
+            "timestamp": "time #1",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "Thursday",
+    "queries": 675,
+    "daily_queries": [
+      {
+        "hour": "00:00",
+        "queries": 10,
+        "hourly_queries": [
+          {
+            "timestamp": "time #1",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "Friday",
+    "queries": 78,
+    "daily_queries": [
+      {
+        "hour": "00:00",
+        "queries": 10,
+        "hourly_queries": [
+          {
+            "timestamp": "time #1",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "Saturday",
+    "queries": 879,
+    "daily_queries": [
+      {
+        "hour": "00:00",
+        "queries": 10,
+        "hourly_queries": [
+          {
+            "timestamp": "time #1",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "Sunday",
+    "queries": 200,
+    "daily_queries": [
+      {
+        "hour": "00:00",
+        "queries": 10,
+        "hourly_queries": [
+          {
+            "timestamp": "time #1",
+            "data": {
+              "intents": [],
+              "entities": [],
+              "actual_message": "",
+              "response_message": ""
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
