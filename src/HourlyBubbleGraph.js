@@ -29,7 +29,7 @@ const parseDomain = (a, b, c) => [
   ),
 ];
 
-const renderTooltip = (props) => {
+const renderBubbleTooltip = (props) => {
   const { active, payload } = props;
 
   if (active && payload && payload.length) {
@@ -44,9 +44,9 @@ const renderTooltip = (props) => {
           padding: 10,
         }}
       >
-        <p>{data.minute}</p>
+        <p>minute #{data.minute}</p>
         <p>
-          <span>Queries: </span>
+          <span>No of Queries: </span>
           {data.queries}
         </p>
       </div>
@@ -57,16 +57,20 @@ const renderTooltip = (props) => {
 };
 
 let domain = null;
-let range = [16, 225];
+let range = [32, 512];
 
-const ScatterGenerator = (data, text_label) => {
-  return (
-    <ScatterChart width={800} height={100}  margin={{
+const ScatterGenerator = (data, text_label, handleClickPassedFromParent) => {
+  /* return (
+    <ScatterChart
+      width={800}
+      height={100}
+      margin={{
         top: 20,
         right: 0,
         bottom: 0,
-        left: 0
-      }}>
+        left: 0,
+      }}
+    >
       <XAxis
         type="category"
         dataKey="minute"
@@ -92,6 +96,57 @@ const ScatterGenerator = (data, text_label) => {
       />
       <Scatter data={data} fill="#8884d8" />
     </ScatterChart>
+  ); */
+
+  const handleBubbleClick = (e) => {
+    //not working as intended
+    handleClickPassedFromParent(e.minute);
+  };
+
+  return (
+    <ScatterChart
+      width={600}
+      height={120}
+      margin={{
+        top: 70,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      }}
+    >
+      <XAxis
+        type="category"
+        dataKey="minute"
+        interval={0}
+        tickLine={{ transform: "translate(0, -6)" }}
+      />
+      <YAxis
+        type="number"
+        dataKey="index"
+        name={text_label}
+        height={100}
+        width={100}
+        tick={false}
+        tickLine={false}
+        axisLine={false}
+        label={{ value: text_label, position: "insideRight" }}
+      />
+      <ZAxis type="number" dataKey="queries" domain={domain} range={range} />
+      <Tooltip
+        cursor={{ strokeDasharray: "3 3" }}
+        wrapperStyle={{ zIndex: 100 }}
+        content={renderBubbleTooltip}
+      />
+      <Scatter
+        data={data}
+        fill="#8884d8"
+        onClick={(e) => {
+          // console.dir(e, { depth: null });
+          handleBubbleClick(e);
+          // handleClickPassedFromParent(e.minute);
+        }}
+      />
+    </ScatterChart>
   );
 };
 
@@ -102,13 +157,12 @@ export default function HourlyBubbleGraph({
   title_text,
   handleClickPassedFromParent,
 }) {
-  console.log("hello world");
   let [first_part, second_part, third_part] = [
     data_to_plot.slice(0, 20),
     data_to_plot.slice(20, 40),
     data_to_plot.slice(40, 60),
   ];
-  console.log(first_part);
+  // console.log(first_part);
 
   domain = parseDomain(first_part, second_part, third_part);
 
@@ -120,9 +174,21 @@ export default function HourlyBubbleGraph({
     <>
       <h3>{title_text}</h3>
       <div style={{ width: "70%", height: 400 }}>
-        {ScatterGenerator(first_part, "00:00-19:59")}
-        {ScatterGenerator(second_part, "20:00-39:99")}
-        {ScatterGenerator(third_part, "40:00-59:99")}
+        {ScatterGenerator(
+          first_part,
+          "00:00-19:59",
+          handleClickPassedFromParent
+        )}
+        {ScatterGenerator(
+          second_part,
+          "20:00-39:99",
+          handleClickPassedFromParent
+        )}
+        {ScatterGenerator(
+          third_part,
+          "40:00-59:99",
+          handleClickPassedFromParent
+        )}
       </div>
     </>
   );

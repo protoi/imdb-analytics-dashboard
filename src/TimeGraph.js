@@ -72,7 +72,7 @@ export default function TimeGraph({
   return (
     <>
       <h3>{title_text}</h3>
-      <div style={{ width: "70%", height: 400 }}>
+      <div style={{ width: "100%", height: 400 }}>
         <ResponsiveContainer>{area_chart}</ResponsiveContainer>
       </div>
     </>

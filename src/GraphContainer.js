@@ -2,7 +2,8 @@ import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
 import { ButtonGroup } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import TimeGraph from "./TimeGraph";
 import HourlyBubbleGraph from "./HourlyBubbleGraph";
 
@@ -15,7 +16,7 @@ function extract_minute_from_date(time_data) {
 function group_data_by_hour(hourly_data) {
   let minutes = [];
   for (let i = 0; i < 60; ++i)
-    minutes.push({ minute: i, queries: 0, data: [] });
+    minutes.push({ minute: i, queries: 0, data: [], index: 1 });
 
   hourly_data.forEach((element) => {
     let minute = extract_minute_from_date(element["exact_time"]);
@@ -27,13 +28,41 @@ function group_data_by_hour(hourly_data) {
 }
 
 export default function GraphContainer({ data }) {
-  let dis = true;
+  // let dis = true;
 
-  let [weeklyGraphClickedIndex, setWeeklyGraphClickedIndex] = useState("nope");
-  let [dailyGraphClickedIndex, setDailyGraphClickedIndex] = useState("nope");
-  let [hourlyGraphClickedIndex, setHourlyGraphClickedIndex] = useState("nope");
+  const [posts, setPosts] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://movie-bot-backend-26orzciwg-ghutoon.vercel.app/query/group_queries_by_date_week?date=2023/02/09"
+      )
+      .then((res) => {
+        console.dir(res, { depth: null });
+        return res;
+      })
+      // .then((data) => {
+      //   console.log(data);
+      //   setPosts(data);
+      // })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  let [weeklyGraphClickedIndex, setWeeklyGraphClickedIndex] = useState(null);
+  let [dailyGraphClickedIndex, setDailyGraphClickedIndex] = useState(null);
+  let [hourlyGraphClickedIndex, setHourlyGraphClickedIndex] = useState(null);
 
   let [stateOfGraph, setStateOfGraph] = useState("weekly");
+  let [displayDetailedInformation, setDisplayDetailedInformation] = useState(
+    false
+  );
+  let [infoToDisplay, setInfoToDisplay] = useState(null);
+
+  // useEffect(() => {
+  //   console.log("stuff", hourlyGraphClickedIndex);
+  // }, [hourlyGraphClickedIndex]);
 
   function handleWeeklyGraphClickedIndex(index) {
     console.log(`clicked index on the weekly graph was: ${index}`);
@@ -45,11 +74,19 @@ export default function GraphContainer({ data }) {
     setDailyGraphClickedIndex(index);
     setStateOfGraph("hourly");
   }
-  function handleHourlyGraphClickedIndex(index) {
-    console.log(`clicked index on the hourly graph was: ${index}`);
-    setHourlyGraphClickedIndex(index);
+  const handleHourlyGraphClickedIndex = (index) => {
+    let intIndex = parseInt(index);
+    console.log(`clicked index on the hourly graph: ${intIndex}`);
+    setHourlyGraphClickedIndex(intIndex);
+
+    if (intIndex == hourlyGraphClickedIndex) {
+      setDisplayDetailedInformation(!displayDetailedInformation); //reverse the state
+      // setInfoToDisplay(intIndex);
+    }
+
+    console.log(hourlyGraphClickedIndex);
     // setStateOfGraph("hourly");
-  }
+  };
 
   function handleBackButtonClick() {
     let previousStateOfGraph = jump_mapping[stateOfGraph];
@@ -60,11 +97,9 @@ export default function GraphContainer({ data }) {
   return (
     <Container
       maxWidth="lg"
-      style={
-        {
-          /*  backgroundColor: "salmon"  */
-        }
-      }
+      style={{
+        outline: "1px red solid",
+      }}
     >
       <Box
         sx={{
@@ -86,38 +121,67 @@ export default function GraphContainer({ data }) {
           <Button>{">>>"}</Button>
         </ButtonGroup>
       </Box>
-      {stateOfGraph === "weekly" && (
-        <TimeGraph
-          data_to_plot={data}
-          x_axis_param={"day"}
-          y_axis_param={"queries"}
-          title_text={"Weekly Queries"}
-          handleClickPassedFromParent={handleWeeklyGraphClickedIndex}
-        />
-      )}
-      {stateOfGraph === "daily" && (
-        <TimeGraph
-          data_to_plot={data[weeklyGraphClickedIndex]["daily_queries"]}
-          x_axis_param={"hour"}
-          y_axis_param={"queries"}
-          title_text={"Daily Queries"}
-          handleClickPassedFromParent={handleDailyGraphClickedIndex}
-        />
-      )}
 
-      {stateOfGraph === "hourly" && (
-        <HourlyBubbleGraph
-          data_to_plot={group_data_by_hour(
-            data[weeklyGraphClickedIndex]["daily_queries"][
-              dailyGraphClickedIndex
-            ]["data"]
+      <Container
+        style={{
+          outline: "1px blue solid",
+          display: "flex",
+        }}
+      >
+        <Box
+          sx={{
+            width: 5 / 5, // 80%
+            height: 5 / 5, // 80%
+            backgroundColor: "#f5f5f5",
+            outline: "1px pink solid",
+          }}
+        >
+          {stateOfGraph === "weekly" && (
+            <TimeGraph
+              data_to_plot={data}
+              x_axis_param={"day"}
+              y_axis_param={"queries"}
+              title_text={"Weekly Queries"}
+              handleClickPassedFromParent={handleWeeklyGraphClickedIndex}
+            />
           )}
-          x_axis_param={"minute"}
-          y_axis_param={"queries"}
-          title_text={"Hourly Queries"}
-          handleClickPassedFromParent={handleHourlyGraphClickedIndex}
-        />
-      )}
+          {stateOfGraph === "daily" && (
+            <TimeGraph
+              data_to_plot={data[weeklyGraphClickedIndex]["daily_queries"]}
+              x_axis_param={"hour"}
+              y_axis_param={"queries"}
+              title_text={"Daily Queries"}
+              handleClickPassedFromParent={handleDailyGraphClickedIndex}
+            />
+          )}
+          {stateOfGraph === "hourly" && (
+            <HourlyBubbleGraph
+              data_to_plot={group_data_by_hour(
+                data[weeklyGraphClickedIndex]["daily_queries"][
+                  dailyGraphClickedIndex
+                ]["data"]
+              )}
+              x_axis_param={"minute"}
+              y_axis_param={"queries"}
+              title_text={"Hourly Queries"}
+              handleClickPassedFromParent={handleHourlyGraphClickedIndex}
+            />
+          )}
+        </Box>
+
+        {displayDetailedInformation && (
+          <Box
+            sx={{
+              width: 2 / 5, // 80%
+              // height: 3 / 5, // 80%
+              backgroundColor: "#f5f5f5",
+              outline: "1px green solid",
+            }}
+          >
+            <p>Hello world {infoToDisplay}</p>
+          </Box>
+        )}
+      </Container>
     </Container>
   );
   /* return (
