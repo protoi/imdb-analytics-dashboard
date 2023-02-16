@@ -52,17 +52,9 @@ export default function GraphContainer({ data }) {
 
   let [weeklyGraphClickedIndex, setWeeklyGraphClickedIndex] = useState(null);
   let [dailyGraphClickedIndex, setDailyGraphClickedIndex] = useState(null);
-  let [hourlyGraphClickedIndex, setHourlyGraphClickedIndex] = useState(null);
+  // let [hourlyGraphClickedIndex, setHourlyGraphClickedIndex] = useState(null);
 
   let [stateOfGraph, setStateOfGraph] = useState("weekly");
-  let [displayDetailedInformation, setDisplayDetailedInformation] = useState(
-    false
-  );
-  let [infoToDisplay, setInfoToDisplay] = useState(null);
-
-  // useEffect(() => {
-  //   console.log("stuff", hourlyGraphClickedIndex);
-  // }, [hourlyGraphClickedIndex]);
 
   function handleWeeklyGraphClickedIndex(index) {
     console.log(`clicked index on the weekly graph was: ${index}`);
@@ -74,19 +66,6 @@ export default function GraphContainer({ data }) {
     setDailyGraphClickedIndex(index);
     setStateOfGraph("hourly");
   }
-  const handleHourlyGraphClickedIndex = (index) => {
-    let intIndex = parseInt(index);
-    console.log(`clicked index on the hourly graph: ${intIndex}`);
-    setHourlyGraphClickedIndex(intIndex);
-
-    if (intIndex == hourlyGraphClickedIndex) {
-      setDisplayDetailedInformation(!displayDetailedInformation); //reverse the state
-      // setInfoToDisplay(intIndex);
-    }
-
-    console.log(hourlyGraphClickedIndex);
-    // setStateOfGraph("hourly");
-  };
 
   function handleBackButtonClick() {
     let previousStateOfGraph = jump_mapping[stateOfGraph];
@@ -96,15 +75,16 @@ export default function GraphContainer({ data }) {
 
   return (
     <Container
-      maxWidth="lg"
+      maxWidth="xl"
       style={{
+        
         outline: "1px red solid",
       }}
     >
       <Box
         sx={{
           //   width: 4 / 5, // 80%
-          //   height: 4 / 5, // 80%
+          height: 4 / 5, // 80%
           backgroundColor: "primary.light",
         }}
       >
@@ -122,16 +102,24 @@ export default function GraphContainer({ data }) {
         </ButtonGroup>
       </Box>
 
-      <Container
-        style={{
-          outline: "1px blue solid",
-          display: "flex",
-        }}
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
       >
+        {/* <div
+          style={{
+            width: 100,
+            height: 200,
+            backgroundColor: "red",
+            outline: "5px pink solid",
+          }}
+        ></div> */}
         <Box
           sx={{
-            width: 5 / 5, // 80%
-            height: 5 / 5, // 80%
+            width: 4 / 5, // 80%
+            height: 4 / 5, // 80%
+
             backgroundColor: "#f5f5f5",
             outline: "1px pink solid",
           }}
@@ -164,24 +152,11 @@ export default function GraphContainer({ data }) {
               x_axis_param={"minute"}
               y_axis_param={"queries"}
               title_text={"Hourly Queries"}
-              handleClickPassedFromParent={handleHourlyGraphClickedIndex}
+              // handleClickPassedFromParent={handleHourlyGraphClickedIndex}
             />
           )}
         </Box>
-
-        {displayDetailedInformation && (
-          <Box
-            sx={{
-              width: 2 / 5, // 80%
-              // height: 3 / 5, // 80%
-              backgroundColor: "#f5f5f5",
-              outline: "1px green solid",
-            }}
-          >
-            <p>Hello world {infoToDisplay}</p>
-          </Box>
-        )}
-      </Container>
+      </Box>
     </Container>
   );
   /* return (
