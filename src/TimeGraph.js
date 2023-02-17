@@ -17,6 +17,7 @@ export default function TimeGraph({
   x_axis_param,
   y_axis_param,
   title_text,
+  interval=0,
   handleClickPassedFromParent,
 }) {
   let line_chart = (
@@ -54,7 +55,7 @@ export default function TimeGraph({
       <XAxis
         dataKey={x_axis_param}
         // padding={{ left: 5, right: 5 }}
-        // interval={0}
+        interval={interval == 0 ? null : interval}
         // angle={0}
         // dx={20}
       />

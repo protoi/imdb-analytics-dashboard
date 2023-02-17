@@ -72,7 +72,7 @@ const renderBubbleTooltip = (props) => {
 };
 
 let domain = null;
-let range = [32, 512];
+let range = [0, 512];
 
 const ScatterGenerator = (data, text_label, clickHandler) => {
   return (
@@ -154,7 +154,7 @@ export default function HourlyBubbleGraph({
     }
     setMinuteToDisplay(minute);
 
-    if (minute >= 0) setDataToDisplay(data_to_plot[minute]["data"]);
+    if (minute >= 0) setDataToDisplay(data_to_plot[minute]["hourly_queries"]);
     else setDataToDisplay([]);
   }
 
@@ -171,28 +171,6 @@ export default function HourlyBubbleGraph({
   //   let bubble_chart_2 = ScatterGenerator(second_part, "08:00-15:99");
   //   let bubble_chart_3 = ScatterGenerator(third_part, "16:00-23:99");
 
-  const mylist = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-  ];
   return (
     <>
       <h3>{title_text}</h3>
@@ -244,18 +222,46 @@ export default function HourlyBubbleGraph({
                         aria-controls="panel1a-content"
                         id={index}
                       >
-                        <Typography>
-                          Accordion #{element.intents[0]} --- {index}
+                        <Typography
+                          align="left"
+                          sx={{ padding: "3%", color: "white" }}
+                        >
+                          {element.intent}
                         </Typography>
                       </AccordionSummary>
                       <AccordionDetails>
-                        <div>
-                          <p>{element.exact_time}</p>
-                          <p>{element.intents[0]}</p>
-                          <p>{element.entities.join(", ")}</p>
-                          <p>{element.actual_message}</p>
-                          <p>{element.response_message}</p>
-                        </div>
+                        <Paper
+                          elevation={3}
+                          style={{
+                            width: "100%",
+                            backgroundColor: "#42a5f5",
+                          }}
+                        >
+                          <div>
+                            <Typography
+                              display="block"
+                              align="left"
+                              padding={"5%"}
+                              sx={{ color: "white" }}
+                            >
+                              <p>{element.timestamp}</p>
+                              <Divider />
+                              <p>{element.intent}</p>
+                              <Divider />
+                              <p>{element.genre.join(", ")}</p>
+                              <Divider />
+                              <p>{element.actor.join(", ")}</p>
+                              <Divider />
+                              <p>{element.daterange[0]}</p>
+                              <Divider />
+                              <p>{element.moviename[0]}</p>
+                              <Divider />
+                              <p>{element.actual_message}</p>
+                              <Divider />
+                              <p>{element.response_message}</p>
+                            </Typography>
+                          </div>
+                        </Paper>
                       </AccordionDetails>
                     </Accordion>
                     <Divider />

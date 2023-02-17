@@ -7,38 +7,80 @@ import axios from "axios";
 import TimeGraph from "./TimeGraph";
 import HourlyBubbleGraph from "./HourlyBubbleGraph";
 
+import TextField from "@mui/material/TextField";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import dayjs from "dayjs";
+
 const jump_mapping = { weekly: null, daily: "weekly", hourly: "daily" };
 
 function extract_minute_from_date(time_data) {
-  return parseInt(time_data.substring(3, 5));
+  return parseInt(time_data.substring(14, 16));
 }
 
 function group_data_by_hour(hourly_data) {
   let minutes = [];
   for (let i = 0; i < 60; ++i)
-    minutes.push({ minute: i, queries: 0, data: [], index: 1 });
+    minutes.push({ minute: i, queries: 0, hourly_queries: [], index: 1 });
 
   hourly_data.forEach((element) => {
-    let minute = extract_minute_from_date(element["exact_time"]);
+    let minute = extract_minute_from_date(element["timestamp"]);
     minutes[minute].queries += 1;
-    minutes[minute].data.push(element);
+    minutes[minute].hourly_queries.push({
+      timestamp: element.timestamp,
+      genre: element.data.entity.genre,
+      actor: element.data.entity.actor,
+      daterange: element.data.entity.daterange,
+      moviename: element.data.entity.moviename,
+      intent: element.data.intent,
+      actual_message: element.data.actual_message,
+      response_message: element.data.response_message,
+    });
   });
+
+  console.log("minutes: ");
+  console.log(minutes);
 
   return minutes;
 }
 
-export default function GraphContainer({ data }) {
+function DatePicker({ dateSelected, setDateSelected, handleChange }) {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DesktopDatePicker
+        label="Date desktop"
+        inputFormat="YYYY/MM/DD"
+        value={dateSelected}
+        onChange={handleChange}
+        renderInput={(params) => <TextField {...params} />}
+      />
+    </LocalizationProvider>
+  );
+}
+
+export default function GraphContainer({ dummy_data }) {
   // let dis = true;
 
-  const [posts, setPosts] = useState("");
+  //States
+  // const [posts, setPosts] = useState("");
+  let [data, setData] = useState(data);
+  let [dateSelected, setDateSelected] = useState(new Date());
+  let [weeklyGraphClickedIndex, setWeeklyGraphClickedIndex] = useState(null);
+  let [dailyGraphClickedIndex, setDailyGraphClickedIndex] = useState(null);
+  let [stateOfGraph, setStateOfGraph] = useState("weekly");
 
+  // Effects
   useEffect(() => {
+    let yyyy_mm_dd_Date_string = dayjs(dateSelected).format("YYYY/MM/DD");
     axios
       .get(
-        "https://movie-bot-backend-26orzciwg-ghutoon.vercel.app/query/group_queries_by_date_week?date=2023/02/09"
+        `https://movie-bot-backend-mkh6s9erg-ghutoon.vercel.app/query/group_queries_by_date_week?date=${yyyy_mm_dd_Date_string}`
       )
       .then((res) => {
         console.dir(res, { depth: null });
+        setData(res.data);
+
         return res;
       })
       // .then((data) => {
@@ -48,65 +90,71 @@ export default function GraphContainer({ data }) {
       .catch((err) => {
         console.log(err.message);
       });
-  }, []);
-
-  let [weeklyGraphClickedIndex, setWeeklyGraphClickedIndex] = useState(null);
-  let [dailyGraphClickedIndex, setDailyGraphClickedIndex] = useState(null);
-  // let [hourlyGraphClickedIndex, setHourlyGraphClickedIndex] = useState(null);
-
-  let [stateOfGraph, setStateOfGraph] = useState("weekly");
-
+  }, [dateSelected]);
   function handleWeeklyGraphClickedIndex(index) {
     console.log(`clicked index on the weekly graph was: ${index}`);
     setWeeklyGraphClickedIndex(index);
-    setStateOfGraph("daily");
+    if (
+      data[index]["daily_queries"] != null &&
+      data[index]["daily_queries"].length > 0
+    ) {
+      setStateOfGraph("daily");
+    }
   }
   function handleDailyGraphClickedIndex(index) {
     console.log(`clicked index on the daily graph was: ${index}`);
     setDailyGraphClickedIndex(index);
-    setStateOfGraph("hourly");
+    if (
+      data[weeklyGraphClickedIndex]["daily_queries"][index]["hourly_queries"] !=
+        null &&
+      data[weeklyGraphClickedIndex]["daily_queries"][index]["hourly_queries"]
+        .length > 0
+    ) {
+      setStateOfGraph("hourly");
+    }
   }
-
   function handleBackButtonClick() {
     let previousStateOfGraph = jump_mapping[stateOfGraph];
     if (previousStateOfGraph == null) return;
     setStateOfGraph(previousStateOfGraph);
   }
+  const handleDatePicked = (newDateSelected) => {
+    console.log(newDateSelected);
+    setDateSelected(newDateSelected);
+  };
 
   return (
     <Container
       maxWidth="xl"
       style={{
-        
         outline: "1px red solid",
       }}
     >
       <Box
         sx={{
           //   width: 4 / 5, // 80%
-          height: 4 / 5, // 80%
+          height: 1 / 5, // 80%
           backgroundColor: "primary.light",
+          padding: "1%",
         }}
       >
         {/* add 3 buttons, one for back and 2 for left and right navigation */}
-        <Button variant="contained" onClick={handleBackButtonClick}>
-          Back
-        </Button>
-        <ButtonGroup
-          variant="contained"
-          //   disabled
-          aria-label="outlined primary button group"
-        >
-          <Button>{"<<<"}</Button>
-          <Button>{">>>"}</Button>
-        </ButtonGroup>
+        {/* have 2 buttons, date picker spawns when stateOfGraph == weekly, else a back button will spawn*/}
+        {stateOfGraph !== "weekly" && (
+          <Button variant="contained" onClick={handleBackButtonClick}>
+            Back
+          </Button>
+        )}
+        {stateOfGraph === "weekly" && (
+          <DatePicker
+            dateSelected={dateSelected}
+            setDateSelected={setDateSelected}
+            handleChange={handleDatePicked}
+          ></DatePicker>
+        )}
       </Box>
 
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center">
         {/* <div
           style={{
             width: 100,
@@ -139,6 +187,7 @@ export default function GraphContainer({ data }) {
               x_axis_param={"hour"}
               y_axis_param={"queries"}
               title_text={"Daily Queries"}
+              interval={6}
               handleClickPassedFromParent={handleDailyGraphClickedIndex}
             />
           )}
@@ -147,7 +196,7 @@ export default function GraphContainer({ data }) {
               data_to_plot={group_data_by_hour(
                 data[weeklyGraphClickedIndex]["daily_queries"][
                   dailyGraphClickedIndex
-                ]["data"]
+                ]["hourly_queries"]
               )}
               x_axis_param={"minute"}
               y_axis_param={"queries"}

@@ -37,7 +37,7 @@ for day in days_of_the_week:
     for t in hours_of_the_day:
         # generate a random number
 
-        queries_this_hour = random.randint(1, 5) * 20
+        queries_this_hour = random.randint(1, 50)
         query_counter += queries_this_hour
 
         temp_list = []
